@@ -1,6 +1,64 @@
-build_kit:
-  name: rust
-  version: latest
-inbound_topics:
-  - name: INCOMING_MESSAGE
-    message_type: make87_messages.text.text_plain.PlainText
+version: 1
+interfaces:
+  - name: zenoh-client
+    protocol: zenoh
+    default_port:
+      name: zenoh-client
+      protocol: TCP
+      target_port: 7447
+    publishers:
+      - name: BOUNDING_BOXES
+        spec:
+          make87_message: make87_messages.detection.box.Boxes2DAxisAligned
+        encoding: proto
+    subscribers:
+      - name: IMAGE_DATA
+        spec:
+          make87_message: make87_messages.image.uncompressed.ImageRawAny
+        encoding: proto
+    providers:
+      - name: DETECTIONS
+        request_spec:
+          make87_message: make87_messages.image.uncompressed.ImageRawAny
+        response_spec:
+          make87_message: make87_messages.detection.box.Boxes2DAxisAligned
+        encoding: proto
+container_config: {}
+config:
+  type: object
+  properties:
+    num_threads:
+      type: integer
+      default: 1
+      description: "The number of threads to use for processing. Default: 1. Only used in CPU builds."
+    classes:
+      type: array
+      items:
+        type: string
+build:
+  build:
+    custom:
+      dockerfile: ./build_kits/Dockerfile.cpu
+      target: dfine_s_cpu
+variants:
+  medium-cpu:
+    build:
+      custom:
+        dockerfile: ./build_kits/Dockerfile.cpu
+        target: dfine_m_cpu
+  small_gpu:
+    peripheral_requirements:
+      - peripheral_type: GPU
+        name: GPU
+    build:
+      custom:
+      dockerfile: ./build_kits/Dockerfile.gpu
+      target: dfine_s_gpu
+  medium_gpu:
+    peripheral_requirements:
+      - peripheral_type: GPU
+        name: GPU
+    build:
+      custom:
+        dockerfile: ./build_kits/Dockerfile.gpu
+        target: dfine_m_gpu

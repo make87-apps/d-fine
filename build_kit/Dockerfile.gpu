@@ -1,0 +1,25 @@
+# syntax=docker/dockerfile:1
+
+FROM rust:1.77 AS base
+WORKDIR /app
+COPY . .
+RUN apt-get update && apt-get install -y curl pkg-config && \
+    cargo build --release --no-default-features --features gpu
+
+# NVIDIA CUDA base + dependencies
+FROM nvcr.io/nvidia/cuda:12.2.0-runtime-ubuntu20.04 AS cuda_base
+RUN apt-get update && apt-get install -y curl
+
+# ---- SMALL MODEL (GPU) ----
+FROM cuda_base AS dfine_s_gpu
+COPY --from=base /app/target/release/your-app /usr/local/bin/app
+RUN mkdir -p /models && \
+    curl -L -o /models/model.onnx https://m87-public-storage.nyc3.digitaloceanspaces.com/model_weights/d-fine/dfine_s_obj2coco.onnx
+CMD ["/usr/local/bin/app"]
+
+# ---- MEDIUM MODEL (GPU) ----
+FROM cuda_base AS dfine_m_gpu
+COPY --from=base /app/target/release/your-app /usr/local/bin/app
+RUN mkdir -p /models && \
+    curl -L -o /models/model.onnx https://m87-public-storage.nyc3.digitaloceanspaces.com/model_weights/d-fine/dfine_m_obj2coco.onnx
+CMD ["/usr/local/bin/app"]

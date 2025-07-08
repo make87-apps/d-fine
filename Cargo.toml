@@ -1,8 +1,20 @@
 [package]
-name = "subscriber_template"
+name = "dfine-infer"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-make87 = "*"
-make87_messages = ">=0.1.0"
+tokio = { version = "1", features = ["full"] }
+ndarray = "0.16.1"
+make87 = { version = "0.1.0-dev6", default-features = false, features = ["zenoh", "protobuf"] }
+make87_messages = ">=0.2.8"
+ort = { version = "2.0.0-rc.10" }
+image = "0.25.6"
+
+[features]
+default = ["cpu"]
+cpu = ["ort/download-binaries"]
+gpu = ["ort/download-binaries", "ort/cuda"]
+
+[dev-dependencies]
+rand = "0.8"
