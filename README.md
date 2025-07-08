@@ -1,0 +1,1 @@
+# Subscriber Template for Rust

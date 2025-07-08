@@ -1,0 +1,8 @@
+[package]
+name = "subscriber_template"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+make87 = "*"
+make87_messages = ">=0.1.0"

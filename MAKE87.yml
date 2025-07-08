@@ -1,0 +1,6 @@
+build_kit:
+  name: rust
+  version: latest
+inbound_topics:
+  - name: INCOMING_MESSAGE
+    message_type: make87_messages.text.text_plain.PlainText
