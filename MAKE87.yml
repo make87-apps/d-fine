@@ -36,10 +36,9 @@ config:
       items:
         type: string
 build:
-  build:
-    custom:
-      dockerfile: ./build_kits/Dockerfile.cpu
-      target: dfine_s_cpu
+  custom:
+    dockerfile: ./build_kits/Dockerfile.cpu
+    target: dfine_s_cpu
 variants:
   medium-cpu:
     build:
@@ -52,8 +51,8 @@ variants:
         name: GPU
     build:
       custom:
-      dockerfile: ./build_kits/Dockerfile.gpu
-      target: dfine_s_gpu
+        dockerfile: ./build_kits/Dockerfile.gpu
+        target: dfine_s_gpu
   medium_gpu:
     peripheral_requirements:
       - peripheral_type: GPU
