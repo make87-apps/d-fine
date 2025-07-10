@@ -2,7 +2,7 @@ FROM rust:1.86-slim-bookworm AS base
 WORKDIR /app
 COPY . .
 RUN apt-get update && \
-    apt-get install -y curl pkg-config libssl-dev && \
+    apt-get install -y curl pkg-config libssl-dev g++ && \
     cargo build --release --no-default-features --features gpu
 
 FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04 AS cuda_base
