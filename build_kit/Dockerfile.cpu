@@ -5,20 +5,20 @@ RUN apt-get update && \
     apt-get install -y curl pkg-config libssl-dev && \
     cargo build --release
 
-# ---- SMALL MODEL ----
-FROM debian:bullseye-slim AS dfine_s_cpu
+FROM debian:bookworm-slim AS dfine_s_cpu
 RUN apt-get update && \
-    apt-get install -y curl libssl1.1
+    apt-get install -y curl libssl3
 COPY --from=base /app/target/release/your-app /usr/local/bin/app
 RUN mkdir -p /models && \
-    curl -L -o /models/model.onnx https://m87-public-storage.nyc3.digitaloceanspaces.com/model_weights/d-fine/dfine_s_obj2coco.onnx
+    curl -L -o /models/model.onnx \
+    https://m87-public-storage.nyc3.digitaloceanspaces.com/model_weights/d-fine/dfine_s_obj2coco.onnx
 CMD ["/usr/local/bin/app"]
 
-# ---- MEDIUM MODEL ----
-FROM debian:bullseye-slim AS dfine_m_cpu
+FROM debian:bookworm-slim AS dfine_m_cpu
 RUN apt-get update && \
-    apt-get install -y curl libssl1.1
+    apt-get install -y curl libssl3
 COPY --from=base /app/target/release/your-app /usr/local/bin/app
 RUN mkdir -p /models && \
-    curl -L -o /models/model.onnx https://m87-public-storage.nyc3.digitaloceanspaces.com/model_weights/d-fine/dfine_m_obj2coco.onnx
+    curl -L -o /models/model.onnx \
+    https://m87-public-storage.nyc3.digitaloceanspaces.com/model_weights/d-fine/dfine_m_obj2coco.onnx
 CMD ["/usr/local/bin/app"]
