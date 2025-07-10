@@ -10,14 +10,14 @@ RUN apt-get update && \
     apt-get install -y curl libssl3
 
 FROM cuda_base AS dfine_s_gpu
-COPY --from=base /app/target/release/your-app /usr/local/bin/app
+COPY --from=base /app/target/release/dfine-infer /usr/local/bin/app
 RUN mkdir -p /models && \
     curl -L -o /models/model.onnx \
     https://m87-public-storage.nyc3.digitaloceanspaces.com/model_weights/d-fine/dfine_s_obj2coco.onnx
 CMD ["/usr/local/bin/app"]
 
 FROM cuda_base AS dfine_m_gpu
-COPY --from=base /app/target/release/your-app /usr/local/bin/app
+COPY --from=base /app/target/release/dfine-infer /usr/local/bin/app
 RUN mkdir -p /models && \
     curl -L -o /models/model.onnx \
     https://m87-public-storage.nyc3.digitaloceanspaces.com/model_weights/d-fine/dfine_m_obj2coco.onnx
